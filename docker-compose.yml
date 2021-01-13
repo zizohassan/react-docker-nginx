@@ -1,0 +1,28 @@
+version: '3'
+
+networks:
+  frontend:
+
+services:
+  nginx:
+    image: library/nginx:stable-alpine
+    container_name: react-nginx
+    volumes:
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+    ports:
+      - "8070:80"
+    depends_on:
+      - react
+    networks:
+      - frontend
+  react:
+    build: ./src/app
+    container_name: react
+    command:
+      "yarn start"
+    volumes:
+      - ./src/app:/app
+    ports:
+      - "3000:3000"
+    networks:
+      - frontend
